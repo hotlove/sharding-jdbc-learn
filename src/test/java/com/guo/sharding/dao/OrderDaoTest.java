@@ -48,7 +48,7 @@ public class OrderDaoTest {
 
         Random random = new Random();
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             int k1 = random.nextInt(36);
 //            int k2 = random.nextInt(36);
             int k3 = random.nextInt(36);
@@ -56,7 +56,7 @@ public class OrderDaoTest {
             int kp2 = random.nextInt(36);
             int kp3 = random.nextInt(36);
             int kc = random.nextInt(36);
-            learnMysqlDao.insertk(str[k1], i, str[k3], str[kp1], str[kp2],str[kp3],str[kc]);
+            learnMysqlDao.insertk(str[k1], i, str[k3], str[kp1], str[kp2],str[kp3],str[kc], i);
         }
     }
 }
