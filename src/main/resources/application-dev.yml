@@ -3,43 +3,43 @@ server:
   servlet:
     context-path: /sharding-jdbc-simple-demo
 
-spring:
-  main:
-    # bean重复覆盖
-    allow-bean-definition-overriding: true
-  http:
-    encoding:
-      enabled: true
-      charset: utf-8
-      force: true
-  application:
-    name: sharding-jdbc-simple-demo
-  # 总结 1.首先配置数据源 2.配置数据节点 3.配置主键生成策略 4.配置分片策略
-  # sharding 数据源配置
-  shardingsphere:
-    datasource:
-      # 数据源别名
-      names: m1
-      m1:
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://47.99.145.78:3336/order_db?useUnicode=true&useSSL=false
-        username: root
-        password: root
-    sharding:
-      tables:
-        t_order: # 这里表明和数据库对应起来的（这里的表名是逻辑表名）
-          actual-data-nodes: m1.t_order_$->{1..2} # 指定t_order表的数据分布情况，配置数据节点
-          key-generator: # 指定t_order表的主键生成策略为snowflake
-            column: order_id
-            type: SNOWFLAKE
-          table-strategy: # 指定 t_order 表的分片策略，分片策略包括分片键和分片算法
-            inline:
-              sharding-column: order_id
-              algorithm-expression: t_order_$->{order_id % 2 + 1}
-    props: # 打开sql输出日志
-      sql:
-        show: true
+#spring:
+#  main:
+#    # bean重复覆盖
+#    allow-bean-definition-overriding: true
+#  http:
+#    encoding:
+#      enabled: true
+#      charset: utf-8
+#      force: true
+#  application:
+#    name: sharding-jdbc-simple-demo
+#  # 总结 1.首先配置数据源 2.配置数据节点 3.配置主键生成策略 4.配置分片策略
+#  # sharding 数据源配置
+#  shardingsphere:
+#    datasource:
+#      # 数据源别名
+#      names: m1
+#      m1:
+#        type: com.alibaba.druid.pool.DruidDataSource
+#        driver-class-name: com.mysql.jdbc.Driver
+#        url: jdbc:mysql://47.99.145.78:3336/order_db?useUnicode=true&useSSL=false
+#        username: root
+#        password: root
+#    sharding:
+#      tables:
+#        t_order: # 这里表明和数据库对应起来的（这里的表名是逻辑表名）
+#          actual-data-nodes: m1.t_order_$->{1..2} # 指定t_order表的数据分布情况，配置数据节点
+#          key-generator: # 指定t_order表的主键生成策略为snowflake
+#            column: order_id
+#            type: SNOWFLAKE
+#          table-strategy: # 指定 t_order 表的分片策略，分片策略包括分片键和分片算法
+#            inline:
+#              sharding-column: order_id
+#              algorithm-expression: t_order_$->{order_id % 2 + 1}
+#    props: # 打开sql输出日志
+#      sql:
+#        show: true
 
 # sharding-jdbc 分片规则
 # 日志
@@ -58,3 +58,63 @@ logging:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+# 单库水平分表
+spring:
+  shardingsphere:
+    # 配置t_order策略
+    rules:
+      sharding:
+        # 配置分表策略
+        tables:
+          t_order:
+            actual-data-nodes: ds0.t_order$->{0..1}
+            database-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: database_inline
+    datasource:
+      names: ds0
+      # 配置第一个数据源
+      ds0:
+        type:
+        driver-class:
+        jdbc-url:
+        username:
+        password:
+
+# 配置真实数据源
+#spring.shardingsphere.datasource.names=ds0,ds1
+#
+## 配置第 1 个数据源
+#spring.shardingsphere.datasource.ds0.type=com.zaxxer.hikari.HikariDataSource
+#spring.shardingsphere.datasource.ds0.driver-class-name=com.mysql.jdbc.Driver
+#spring.shardingsphere.datasource.ds0.jdbc-url=jdbc:mysql://localhost:3306/ds0
+#spring.shardingsphere.datasource.ds0.username=root
+#spring.shardingsphere.datasource.ds0.password=
+#
+## 配置第 2 个数据源
+#spring.shardingsphere.datasource.ds1.type=com.zaxxer.hikari.HikariDataSource
+#spring.shardingsphere.datasource.ds1.driver-class-name=com.mysql.jdbc.Driver
+#spring.shardingsphere.datasource.ds1.jdbc-url=jdbc:mysql://localhost:3306/ds1
+#spring.shardingsphere.datasource.ds1.username=root
+#spring.shardingsphere.datasource.ds1.password=
+#
+## 配置 t_order 表规则
+#spring.shardingsphere.rules.sharding.tables.t_order.actual-data-nodes=ds$->{0..1}.t_order$->{0..1}
+#
+## 配置分库策略
+#spring.shardingsphere.rules.sharding.tables.t_order.database-strategy.standard.sharding-column=user_id
+#spring.shardingsphere.rules.sharding.tables.t_order.database-strategy.standard.sharding-algorithm-name=database_inline
+#
+## 配置分表策略
+#spring.shardingsphere.rules.sharding.tables.t_order.table-strategy.standard.sharding-column=order_id
+#spring.shardingsphere.rules.sharding.tables.t_order.table-strategy.standard.sharding-algorithm-name=table_inline
+#
+## 省略配置 t_order_item 表规则...
+## ...
+#
+## 配置 分片算法
+#spring.shardingsphere.rules.sharding.sharding-algorithms.database_inline.type=INLINE
+#spring.shardingsphere.rules.sharding.sharding-algorithms.database_inline.props.algorithm-expression=ds_${user_id % 2}
+#spring.shardingsphere.rules.sharding.sharding-algorithms.table_inline.type=INLINE
+#spring.shardingsphere.rules.sharding.sharding-algorithms.table_inline.props.algorithm-expression=t_order_${order_id % 2}
