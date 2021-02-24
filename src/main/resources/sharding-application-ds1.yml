@@ -1,0 +1,12 @@
+spring:
+  # 总结 1.首先配置数据源 2.配置数据节点 3.配置主键生成策略 4.配置分片策略
+  # sharding 数据源配置
+  shardingsphere:
+    sharding:
+      tables:
+        # profile 表垂直分库直接分配到另外一个库，并且不需要水平分表
+        profile:
+          actual-data-nodes: ds1.profile_1 # 指定profile_1表的数据分布情况，配置数据节点
+          key-generator: # 指定t_order表的主键生成策略为snowflake
+            column: profile_id
+            type: SNOWFLAKE

@@ -33,4 +33,7 @@ public interface OrderDao {
             "</foreach>" +
             "</script>")
     List<Map> selectOrderByIds(@Param("orderIds") List<Long> orderIds);
+
+    @Insert("insert into profile(profile_id, user_name, vip_grade, address) values(#{userName}, #{vipGrade}, #{address})")
+    int insertProfile(@Param("userName") String userName, @Param("vipGrade") Integer vipGrade, @Param("address") String address);
 }

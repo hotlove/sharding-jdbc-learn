@@ -22,7 +22,7 @@
     </parent>
 
     <properties>
-        <shardingsphere.version>4.1.1</shardingsphere.version>
+        <shardingsphere.version>4.0.0-RC1</shardingsphere.version>
     </properties>
 
     <repositories>

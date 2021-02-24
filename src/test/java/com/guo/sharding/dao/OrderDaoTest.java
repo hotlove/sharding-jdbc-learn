@@ -3,6 +3,7 @@ package com.guo.sharding.dao;
 import com.guo.sharding.BootStrap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -25,8 +26,8 @@ public class OrderDaoTest {
     @Resource
     OrderDao orderDao;
 
-    @Resource
-    LearnMysqlDao learnMysqlDao;
+    @Value("${spring.profiles.active}")
+    String pvalue;
 
     @Test
     public void testInsertOrder() {
@@ -37,26 +38,21 @@ public class OrderDaoTest {
 
     @Test
     public void testSelectOrder() {
-        List<Map> maps = orderDao.selectOrderByIds(Arrays.asList(461651844507107328L, 461651844704239617L));
+        List<Map> maps = orderDao.selectOrderByIds(Arrays.asList(571280340715307008L, 571280341398978561L));
         System.out.println(maps);
     }
 
     @Test
-    public void testLearnMysql() {
-        String [] str = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "r", "t",
-                "A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "T"};
-
-        Random random = new Random();
-
-        for (int i = 0; i < 100000; i++) {
-            int k1 = random.nextInt(36);
-//            int k2 = random.nextInt(36);
-            int k3 = random.nextInt(36);
-            int kp1 = random.nextInt(36);
-            int kp2 = random.nextInt(36);
-            int kp3 = random.nextInt(36);
-            int kc = random.nextInt(36);
-            learnMysqlDao.insertk(str[k1], i, str[k3], str[kp1], str[kp2],str[kp3],str[kc], i);
+    public void testInsertProfile() {
+        for (int i = 10; i < 20; i++) {
+            orderDao.insertProfile("user_" + i, i, "adress_" + i);
         }
+        testInsertOrder();
+
+    }
+
+    @Test
+    public void testValue() {
+        System.out.println("value----------"+pvalue);
     }
 }
