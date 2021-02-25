@@ -47,9 +47,9 @@ sharding:
   config-file: sharding-ds0,sharding-ds1
 # 垂直分库
 spring:
-  profiles:
-    # 指定其他文件对应application-ds0.yml和application-ds1.yml
-    include: ds1
+#  profiles:
+#    # 指定其他文件对应application-ds0.yml和application-ds1.yml
+#    include: ds1
   main:
     # bean重复覆盖
     allow-bean-definition-overriding: true

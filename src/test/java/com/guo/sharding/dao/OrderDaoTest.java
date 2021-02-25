@@ -26,9 +26,6 @@ public class OrderDaoTest {
     @Resource
     OrderDao orderDao;
 
-    @Value("${spring.profiles.active}")
-    String pvalue;
-
     @Test
     public void testInsertOrder() {
         for (int i = 1; i < 20; i++) {
@@ -38,7 +35,7 @@ public class OrderDaoTest {
 
     @Test
     public void testSelectOrder() {
-        List<Map> maps = orderDao.selectOrderByIds(Arrays.asList(571280340715307008L, 571280341398978561L));
+        List<Map> maps = orderDao.selectOrderByIds(Arrays.asList(571656316867575808L, 571656817839439873L));
         System.out.println(maps);
     }
 
@@ -47,12 +44,7 @@ public class OrderDaoTest {
         for (int i = 10; i < 20; i++) {
             orderDao.insertProfile("user_" + i, i, "adress_" + i);
         }
-        testInsertOrder();
+//        testInsertOrder();
 
-    }
-
-    @Test
-    public void testValue() {
-        System.out.println("value----------"+pvalue);
     }
 }

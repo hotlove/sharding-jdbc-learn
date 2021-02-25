@@ -30,14 +30,14 @@ public class CustomEnvironmentPostProcessor implements EnvironmentPostProcessor 
 
         // 获取配置得classpath目录
         String shardingClassPath = environment.getProperty("sharding.classpath-dir");
-        System.out.println("============shardingClassPath"+shardingClassPath);
+        System.out.println("============shardingClassPath:"+shardingClassPath);
         if (StringUtils.isEmpty(shardingClassPath)) {
             shardingClassPath = SHARDING_PREFIX;
         }
 
         // sharding配置文件
         String shardingConfigFiles = environment.getProperty("sharding.config-file");
-        System.out.println("============shardingConfigFils"+shardingConfigFiles);
+        System.out.println("============shardingConfigFils:"+shardingConfigFiles);
         if (!StringUtils.isEmpty(shardingConfigFiles)) {
 
             String[] shardingConfigFileArr = shardingConfigFiles.split(",");
@@ -48,6 +48,7 @@ public class CustomEnvironmentPostProcessor implements EnvironmentPostProcessor 
                 //从classpath路径下面查找文件
                 String filePath = shardingClassPath + "/" + shardingConfigFile + ".properties";
 
+                System.out.println("real path:"+filePath);
                 Resource resource = new ClassPathResource(filePath);
                 //加载成PropertySource对象，并添加到Environment环境中
                 environment.getPropertySources().addLast(loadProfiles(resource));
