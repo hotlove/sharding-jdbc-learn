@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * @Auther: hotlove_linx
@@ -45,6 +47,27 @@ public class OrderDaoTest {
             orderDao.insertProfile("user_" + i, i, "adress_" + i);
         }
 //        testInsertOrder();
+
+    }
+
+    @Test
+    public void testPark() {
+        Thread t = Thread.currentThread();
+        new Thread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+                LockSupport.unpark(t);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        int count = 0;
+        for (;;) {
+            System.out.println(count++);
+            LockSupport.park(Thread.currentThread());
+        }
+
+
 
     }
 }
