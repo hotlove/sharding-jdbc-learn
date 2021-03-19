@@ -70,4 +70,10 @@ public class OrderDaoTest {
 
 
     }
+
+    @Test
+    public void testcom() {
+        Long a = new Long(0);
+        System.out.println(a.longValue()==0L);
+    }
 }
